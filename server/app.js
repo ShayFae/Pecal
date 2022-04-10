@@ -1,12 +1,27 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const app = express();
+const PORT = 8080;
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const socketIo = require("socket.io");
+const http = require('http');
+const server = http.createServer(app);
+const io = socketIo(server);
 
-var app = express();
+app.get('/', (req, res) => {
+  res.send('<h1>Hello world</h1>');
+});
+
+io.on('connection', () => {
+  console.log('a user connected');
+});
+
+server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
 app.use(logger('dev'));
 app.use(express.json());
